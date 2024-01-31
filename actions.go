@@ -17,6 +17,7 @@ func Demo() {
 	fmt.Printf("FYP Pipeline Testing 1.0")
 	fmt.Printf("FYP Pipeline Testing 2.0")
 	fmt.Printf("FYP Pipeline Testing 3.0")
+	fmt.Printf("FYP Pipeline Testing 4.0")
 
 	fmt.Println(quote.Go())
 }
