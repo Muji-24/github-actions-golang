@@ -1,27 +1,25 @@
-name: Test
 on: [push, pull_request]
+name: Test
 jobs:
-  test:
+  test-nocache:
     strategy:
       matrix:
         go-version: [1.20.x, 1.21.x]
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-go@v4
+      with:
+        go-version: ${{ matrix.go-version }}
+        cache: false
+    - run: go test ./...
+
+  test-cache:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-
-      - uses: actions/setup-go@v4
-        with:
-          go-version: ${{ matrix.go-version }}
-          cache: false
-
-      # Install Datadog CI CLI
-      - name: Install Datadog CI CLI
-        run: |
-          curl -LO https://github.com/DataDog/datadog-ci/releases/download/v2.26.0/datadog-ci-linux-amd64
-          chmod +x datadog-ci-linux-amd64
-          sudo mv datadog-ci-linux-amd64 /usr/local/bin/datadog-ci
-
-      # Run tests via Datadog CI
-      - name: Run tests with Datadog CI
-        run: |
-          datadog-ci test run --api-key ${{ secrets.DD_API_KEY }} --app-key ${{ secrets.DD_APP_KEY }} -- go test ./...
+    - uses: actions/checkout@v3
+    - uses: actions/setup-go@v4
+      with:
+        go-version: 1.21.x
+    - run: go test ./...
