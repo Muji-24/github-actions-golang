@@ -1,5 +1,5 @@
 // Copyright (c) 2019, Daniel Martí <mvdan@mvdan.cc>
-// See LICENSE for licensing information
+// See LICENSE for licensing informations
 
 package actions
 
