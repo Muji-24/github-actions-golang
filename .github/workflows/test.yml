@@ -15,13 +15,14 @@ jobs:
         go-version: ${{ matrix.go-version }}
         cache: false
 
-    # Datadog: wrap job execution
     - name: Run tests with Datadog visibility
-      uses: DataDog/datadog-actions-ci@v1
+      uses: DataDog/ci-visibility-action@v1
       with:
         api_key: ${{ secrets.DD_API_KEY }}
-        site: datadoghq.com   # use datadoghq.eu if in EU
-        command: go test ./...
+        site: datadoghq.com
+        languages: go
+        # 👇 command you want Datadog to wrap
+        run: go test ./...
 
   test-cache:
     runs-on: ubuntu-latest
@@ -31,10 +32,10 @@ jobs:
       with:
         go-version: 1.21.x
 
-    # Datadog: wrap job execution
     - name: Run tests with Datadog visibility
-      uses: DataDog/datadog-actions-ci@v1
+      uses: DataDog/ci-visibility-action@v1
       with:
         api_key: ${{ secrets.DD_API_KEY }}
         site: datadoghq.com
-        command: go test ./...
+        languages: go
+        run: go test ./...
