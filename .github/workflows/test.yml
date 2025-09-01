@@ -1,6 +1,5 @@
 on: [push, pull_request]
 name: Test
-
 jobs:
   test-nocache:
     strategy:
@@ -14,15 +13,7 @@ jobs:
       with:
         go-version: ${{ matrix.go-version }}
         cache: false
-
-    - name: Run tests with Datadog visibility
-      uses: DataDog/ci-visibility-action@v1
-      with:
-        api_key: ${{ secrets.DD_API_KEY }}
-        site: datadoghq.com
-        languages: go
-        # 👇 command you want Datadog to wrap
-        run: go test ./...
+    - run: go test ./...
 
   test-cache:
     runs-on: ubuntu-latest
@@ -31,11 +22,4 @@ jobs:
     - uses: actions/setup-go@v4
       with:
         go-version: 1.21.x
-
-    - name: Run tests with Datadog visibility
-      uses: DataDog/ci-visibility-action@v1
-      with:
-        api_key: ${{ secrets.DD_API_KEY }}
-        site: datadoghq.com
-        languages: go
-        run: go test ./...
+    - run: go test ./...
