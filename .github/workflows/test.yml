@@ -1,31 +1,25 @@
 on: [push, pull_request]
-name: CI
-
+name: Test
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  test-nocache:
+    strategy:
+      matrix:
+        go-version: [1.20.x, 1.21.x]
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-go@v4
-        with:
-          go-version: 1.21.x
-      - run: go build ./...
+    - uses: actions/checkout@v3
+    - uses: actions/setup-go@v4
+      with:
+        go-version: ${{ matrix.go-version }}
+        cache: false
+    - run: go test ./...
 
-  lint:
+  test-cache:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - run: go vet ./...
-
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-go@v4
-        with:
-          go-version: 1.21.x
-      - run: go test ./... -coverprofile=coverage.out
-      - uses: actions/upload-artifact@v3
-        with:
-          name: coverage
-          path: coverage.out
+    - uses: actions/checkout@v3
+    - uses: actions/setup-go@v4
+      with:
+        go-version: 1.21.x
+    - run: go test ./...
